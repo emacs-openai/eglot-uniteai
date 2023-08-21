@@ -38,5 +38,102 @@
   :group 'eglot
   :link '(url-link "https://github.com/emacs-openai/eglot-uniteai"))
 
+(defcustom eglot-uniteai-active-modes
+  '(python-mode markdown-mode org-mode)
+  "List of major mode that work with UniteAI."
+  :type 'list
+  :group 'lsp-uniteai)
+
+(defcustom eglot-uniteai-connection-method 'stdio
+  "Method to connect to the UniteAI language server."
+  :type '(choice (const :tag "--stdio" stdio)
+                 (const :tag "--tcp" tcp))
+  :group 'lsp-uniteai)
+
+(defcustom eglot-uniteai-port 5033
+  "Port number to start the language server."
+  :type 'integer
+  :group 'lsp-uniteai)
+
+;;
+;; (@* "Client" )
+;;
+
+(defun eglot-uniteai--server-command ()
+  "Generate startup command for UniteAI language server."
+  (cl-case eglot-uniteai-connection-method
+    (`stdio (list 'eglot-uniteai-server "uniteai_lsp" "--stdio"))
+    (`tcp (list 'eglot-uniteai-server "uniteai_lsp" "--tcp" "--lsp_port" eglot-uniteai-port))))
+
+(add-to-list 'eglot-server-programs
+             `(,eglot-uniteai-active-modes . ,(eglot-uniteai--server-command)))
+
+;;
+;; (@* "Util" )
+;;
+
+(defun eglot-uniteai--range ()
+  "Return the current region in LSP scope."
+  (unless (region-active-p)
+    (user-error "No region selected"))
+  (list :start (eglot--pos-to-lsp-position (region-beginning))
+        :end   (eglot--pos-to-lsp-position (region-end))))
+
+;;
+;; (@* "Commands" )
+;;
+
+;; Global stopping
+(defun eglot-uniteai-stop ()
+  "Stop the UniteAI."
+  (interactive)
+  (let* ((server (eglot--current-server-or-lose))
+         (doc (eglot--TextDocumentIdentifier)))
+    (eglot-execute-command server 'command.stop (vector doc))))
+
+;; Example Counter
+(defun eglot-uniteai-example-counter ()
+  "TODO: .."
+  (interactive)
+  (let* ((server (eglot--current-server-or-lose))
+         (doc (eglot--TextDocumentIdentifier))
+         (pos (eglot--pos-to-lsp-position (point))))
+    (eglot-execute-command server 'command.exampleCounter (vector doc pos))))
+
+;; Local LLM
+(defun eglot-uniteai-local-llm ()
+  "TODO: .."
+  (interactive)
+  (let ((server (eglot--current-server-or-lose))
+        (doc (eglot--TextDocumentIdentifier))
+        (range (eglot-uniteai--range)))
+    (eglot-execute-command server 'command.localLlmStream (vector doc range))))
+
+;; Transcription
+(defun eglot-uniteai-transcribe ()
+  "TODO: .."
+  (interactive)
+  (let* ((server (eglot--current-server-or-lose))
+         (doc (eglot--TextDocumentIdentifier))
+         (pos (eglot--pos-to-lsp-position (point))))
+    (eglot-execute-command server 'command.transcribe (vector doc pos))))
+
+;; OpenAI
+(defun eglot-uniteai-openai-gpt ()
+  "TODO: .."
+  (interactive)
+  (let ((server (eglot--current-server-or-lose))
+        (doc (eglot--TextDocumentIdentifier))
+        (range (eglot-uniteai--range)))
+    (eglot-execute-command server 'command.openaiAutocompleteStream (vector doc range "FROM_CONFIG_COMPLETION" "FROM_CONFIG"))))
+
+(defun eglot-uniteai-openai-chatgpt ()
+  "TODO: .."
+  (interactive)
+  (let* ((server (eglot--current-server-or-lose))
+         (doc (eglot--TextDocumentIdentifier))
+         (range (eglot-uniteai--range)))
+    (eglot-execute-command server 'command.openaiAutocompleteStream (vector doc range "FROM_CONFIG_CHAT" "FROM_CONFIG"))))
+
 (provide 'eglot-uniteai)
 ;;; eglot-uniteai.el ends here

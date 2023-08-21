@@ -7,3 +7,13 @@
 [![CI](https://github.com/emacs-openai/eglot-uniteai/actions/workflows/test.yml/badge.svg)](https://github.com/emacs-openai/eglot-uniteai/actions/workflows/test.yml)
 
 `eglot` client leveraging [uniteai](https://github.com/freckletonj/uniteai).
+
+## 💾 Quickstart
+
+```elisp
+(use-package eglot-uniteai
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'eglot-uniteai)
+                         (call-interactively #'eglot))))
+```
