@@ -1,8 +1,10 @@
 ;;; eglot-uniteai.el --- Eglot Clients for UniteAI  -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2023 Josh Freckleton
 ;; Copyright (C) 2023  Shen, Jen-Chieh
 
-;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
+;; Author: Josh Freckleton <freckletonj@gmail.com>
+;;         Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-openai/eglot-uniteai
 ;; Version: 0.1.0
