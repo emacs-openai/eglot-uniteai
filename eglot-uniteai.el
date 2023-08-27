@@ -41,7 +41,13 @@
   :link '(url-link "https://github.com/emacs-openai/eglot-uniteai"))
 
 (defcustom eglot-uniteai-active-modes
-  '(python-mode markdown-mode org-mode)
+  '( markdown-mode org-mode python-mode bibtex-mode clojure-mode coffee-mode
+     c-mode c++-mode csharp-mode css-mode diff-mode dockerfile-mode fsharp-mode
+     go-mode groovy-mode html-mode web-mode java-mode js-mode js2-mode json-mode
+     LaTeX-mode less-css-mode lua-mode makefile-mode objc-mode perl-mode
+     php-mode text-mode powershell-mode ess-mode ruby-mode rust-mode scss-mode
+     sass-mode sh-mode sql-mode swift-mode typescript-mode TeX-mode nxml-mode
+     yaml-mode sh-mode toml-mode)
   "List of major mode that work with UniteAI."
   :type 'list
   :group 'lsp-uniteai)
